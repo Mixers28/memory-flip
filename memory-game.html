@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memory Game</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background: #1a1a2e;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      color: #eee;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 8px;
+      letter-spacing: 2px;
+      color: #e94560;
+    }
+
+    .stats {
+      display: flex;
+      gap: 32px;
+      margin-bottom: 24px;
+      font-size: 1rem;
+      color: #a8b2d8;
+    }
+
+    .stats span strong {
+      color: #e2e8f0;
+    }
+
+    .controls {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      align-items: center;
+    }
+
+    select, button {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: none;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    select {
+      background: #16213e;
+      color: #eee;
+      border: 1px solid #0f3460;
+    }
+
+    button {
+      background: #e94560;
+      color: white;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background: #c73652;
+    }
+
+    .grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .card {
+      width: 90px;
+      height: 90px;
+      perspective: 600px;
+      cursor: pointer;
+    }
+
+    .card-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 12px;
+    }
+
+    .card.flipped .card-inner,
+    .card.matched .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .card-front,
+    .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      user-select: none;
+    }
+
+    .card-front {
+      background: #16213e;
+      border: 2px solid #0f3460;
+      color: #0f3460;
+    }
+
+    .card-front::after {
+      content: '?';
+      font-size: 1.8rem;
+      color: #0f3460;
+    }
+
+    .card-back {
+      background: #0f3460;
+      border: 2px solid #e94560;
+      transform: rotateY(180deg);
+    }
+
+    .card.matched .card-back {
+      background: #1a4731;
+      border-color: #2ecc71;
+    }
+
+    .card:not(.flipped):not(.matched):hover .card-inner {
+      transform: rotateY(15deg);
+    }
+
+    .win-banner {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    .win-banner.show {
+      display: flex;
+    }
+
+    .win-box {
+      background: #16213e;
+      border: 2px solid #e94560;
+      border-radius: 16px;
+      padding: 40px 56px;
+      text-align: center;
+    }
+
+    .win-box h2 {
+      font-size: 2rem;
+      color: #e94560;
+      margin-bottom: 12px;
+    }
+
+    .win-box p {
+      color: #a8b2d8;
+      margin-bottom: 24px;
+      font-size: 1.1rem;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Memory Game</h1>
+
+<div class="stats">
+  <span>Moves: <strong id="moves">0</strong></span>
+  <span>Matches: <strong id="matches">0</strong> / <strong id="total">0</strong></span>
+  <span>Time: <strong id="timer">0s</strong></span>
+</div>
+
+<div class="controls">
+  <label for="difficulty" style="color:#a8b2d8">Grid:</label>
+  <select id="difficulty">
+    <option value="4">4 x 4 (Easy)</option>
+    <option value="6" selected>6 x 4 (Medium)</option>
+    <option value="6x6">6 x 6 (Hard)</option>
+  </select>
+  <button onclick="startGame()">New Game</button>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<div class="win-banner" id="winBanner">
+  <div class="win-box">
+    <h2>You Won!</h2>
+    <p id="winStats"></p>
+    <button onclick="startGame()">Play Again</button>
+  </div>
+</div>
+
+<script>
+  const EMOJIS = [
+    '🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼',
+    '🐨','🐯','🦁','🐸','🦋','🐝','🦄','🦖',
+    '🦩','🦚','🦜','🐙','🦞','🦀','🦑','🐠',
+    '🍎','🍊','🍋','🍇','🍓','🍒','🥝','🌈'
+  ];
+
+  let flipped = [];
+  let matched = 0;
+  let moves = 0;
+  let total = 0;
+  let lock = false;
+  let timerInterval = null;
+  let seconds = 0;
+
+  function getGridDimensions() {
+    const val = document.getElementById('difficulty').value;
+    if (val === '4') return { cols: 4, pairs: 8 };
+    if (val === '6') return { cols: 6, pairs: 12 };
+    if (val === '6x6') return { cols: 6, pairs: 18 };
+  }
+
+  function startGame() {
+    clearInterval(timerInterval);
+    seconds = 0;
+    moves = 0;
+    matched = 0;
+    flipped = [];
+    lock = false;
+
+    const { cols, pairs } = getGridDimensions();
+    total = pairs;
+
+    document.getElementById('moves').textContent = 0;
+    document.getElementById('matches').textContent = 0;
+    document.getElementById('total').textContent = pairs;
+    document.getElementById('timer').textContent = '0s';
+    document.getElementById('winBanner').classList.remove('show');
+
+    const symbols = shuffle([...EMOJIS.slice(0, pairs), ...EMOJIS.slice(0, pairs)]);
+
+    const grid = document.getElementById('grid');
+    grid.style.gridTemplateColumns = `repeat(${cols}, 90px)`;
+    grid.innerHTML = '';
+
+    symbols.forEach((emoji, i) => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.dataset.symbol = emoji;
+      card.dataset.index = i;
+      card.innerHTML = `
+        <div class="card-inner">
+          <div class="card-front"></div>
+          <div class="card-back">${emoji}</div>
+        </div>`;
+      card.addEventListener('click', () => flipCard(card));
+      grid.appendChild(card);
+    });
+
+    timerInterval = setInterval(() => {
+      seconds++;
+      document.getElementById('timer').textContent = seconds + 's';
+    }, 1000);
+  }
+
+  function flipCard(card) {
+    if (lock || card.classList.contains('flipped') || card.classList.contains('matched')) return;
+    card.classList.add('flipped');
+    flipped.push(card);
+
+    if (flipped.length === 2) {
+      lock = true;
+      moves++;
+      document.getElementById('moves').textContent = moves;
+      checkMatch();
+    }
+  }
+
+  function checkMatch() {
+    const [a, b] = flipped;
+    if (a.dataset.symbol === b.dataset.symbol) {
+      a.classList.add('matched');
+      b.classList.add('matched');
+      matched++;
+      document.getElementById('matches').textContent = matched;
+      flipped = [];
+      lock = false;
+      if (matched === total) endGame();
+    } else {
+      setTimeout(() => {
+        a.classList.remove('flipped');
+        b.classList.remove('flipped');
+        flipped = [];
+        lock = false;
+      }, 900);
+    }
+  }
+
+  function endGame() {
+    clearInterval(timerInterval);
+    document.getElementById('winStats').textContent =
+      `Completed in ${moves} moves and ${seconds} seconds!`;
+    document.getElementById('winBanner').classList.add('show');
+  }
+
+  function shuffle(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  startGame();
+</script>
+</body>
+</html>
