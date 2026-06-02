@@ -1,0 +1,14 @@
+# Xcode build output
+build/
+DerivedData/
+
+# Xcode user settings
+*.xcuserstate
+xcuserdata/
+*.xcworkspace/xcuserdata/
+
+# macOS
+.DS_Store
+
+# Claude internal
+.claude/
