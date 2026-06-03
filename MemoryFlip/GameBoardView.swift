@@ -79,21 +79,17 @@ struct GameBoardView: View {
             let vGap: CGFloat = 8
             let cardW = (geo.size.width - 2 * hPad - CGFloat(cols - 1) * hGap) / CGFloat(cols)
             let cardH = (geo.size.height - CGFloat(rows - 1) * vGap) / CGFloat(rows)
-            let size = min(cardW, cardH)
 
-            let gridCols = Array(repeating: GridItem(.fixed(size), spacing: hGap), count: cols)
+            let gridCols = Array(repeating: GridItem(.fixed(cardW), spacing: hGap), count: cols)
 
-            ScrollView {
-                LazyVGrid(columns: gridCols, spacing: vGap) {
-                    ForEach(model.cards.indices, id: \.self) { index in
-                        CardView(card: model.cards[index])
-                            .frame(width: size, height: size)
-                            .onTapGesture { model.flipCard(at: index) }
-                    }
+            LazyVGrid(columns: gridCols, spacing: vGap) {
+                ForEach(model.cards.indices, id: \.self) { index in
+                    CardView(card: model.cards[index])
+                        .frame(width: cardW, height: cardH)
+                        .onTapGesture { model.flipCard(at: index) }
                 }
-                .padding(.horizontal, hPad)
             }
-            .scrollDisabled(true)
+            .padding(.horizontal, hPad)
         }
         .padding(.bottom, 10)
     }

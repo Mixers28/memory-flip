@@ -22,7 +22,6 @@ struct CardView: View {
                 .opacity(card.isFlipped ? 1 : 0)
         }
         .animation(.spring(response: 0.38, dampingFraction: 0.72), value: card.isFlipped)
-        .aspectRatio(1.0, contentMode: .fit)
     }
 }
 
