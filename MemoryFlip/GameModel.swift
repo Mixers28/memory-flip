@@ -17,7 +17,6 @@ struct Card: Identifiable {
 
 class GameModel: ObservableObject {
     // Run state
-    @Published var lives = 3
     @Published var level = 1
     @Published var score = 0
     @Published var isLevelWon = false
@@ -29,10 +28,6 @@ class GameModel: ObservableObject {
     @Published var lastLevelTimeBonus = 0
     @Published var lastLevelEfficiencyBonus = 0
     @Published var lastLevelWasPerfect = false
-
-    // Lives activate at this level (grids get large enough to matter)
-    let livesActiveFromLevel = 5
-    var livesActive: Bool { level >= livesActiveFromLevel }
 
     // Board state
     @Published var cards: [Card] = []
@@ -86,7 +81,6 @@ class GameModel: ObservableObject {
     init() { startRun() }
 
     func startRun() {
-        lives = 3
         level = 1
         score = 0
         isLevelWon = false
@@ -150,10 +144,6 @@ class GameModel: ObservableObject {
                     self.cards[a].isFlipped = false
                     self.cards[b].isFlipped = false
                     self.isChecking = false
-                    if self.livesActive {
-                        self.lives -= 1
-                        if self.lives <= 0 { self.endRun() }
-                    }
                 }
             }
         } else {

@@ -42,7 +42,7 @@ struct MenuView: View {
             Text("Memory Flip")
                 .font(.system(size: 40, weight: .bold, design: .rounded))
                 .foregroundStyle(.white)
-            Text("Match pairs · survive on 3 lives · beat your best")
+            Text("Match pairs · beat your best score")
                 .font(.system(size: 14, weight: .medium))
                 .foregroundStyle(.white.opacity(0.6))
                 .multilineTextAlignment(.center)

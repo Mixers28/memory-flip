@@ -70,11 +70,7 @@ struct GameBoardView: View {
             Spacer()
             StatPill(icon: "star.fill", label: "Score", value: "\(model.score)")
             Spacer()
-            if model.livesActive {
-                LivesPill(lives: model.lives)
-            } else {
-                StatPill(icon: "hand.tap", label: "Moves", value: "\(model.moves)")
-            }
+            StatPill(icon: "hand.tap", label: "Moves", value: "\(model.moves)")
         }
     }
 
@@ -126,22 +122,3 @@ struct StatPill: View {
     }
 }
 
-struct LivesPill: View {
-    let lives: Int
-
-    var body: some View {
-        HStack(spacing: 5) {
-            ForEach(0..<3, id: \.self) { i in
-                Image(systemName: i < lives ? "heart.fill" : "heart")
-                    .font(.system(size: 18, weight: .semibold))
-                    .foregroundStyle(i < lives ? Color(red: 1.0, green: 0.25, blue: 0.35) : .white.opacity(0.25))
-                    .animation(.spring(response: 0.3, dampingFraction: 0.55), value: lives)
-            }
-        }
-        .frame(minWidth: 72)
-        .padding(.vertical, 9)
-        .padding(.horizontal, 14)
-        .background(.white.opacity(0.09))
-        .clipShape(RoundedRectangle(cornerRadius: 13))
-    }
-}
