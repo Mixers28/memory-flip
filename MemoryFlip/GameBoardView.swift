@@ -1,12 +1,8 @@
 import SwiftUI
 
 struct GameBoardView: View {
-    @StateObject private var model: GameModel
+    @StateObject private var model = GameModel()
     @Environment(\.dismiss) private var dismiss
-
-    init(difficulty: Difficulty) {
-        _model = StateObject(wrappedValue: GameModel(difficulty: difficulty))
-    }
 
     var body: some View {
         ZStack {
@@ -19,12 +15,20 @@ struct GameBoardView: View {
                 cardGrid
             }
 
-            if model.isGameWon {
-                WinOverlayView(model: model, onMenu: { dismiss() })
+            if model.isLevelWon && !model.isRunOver {
+                LevelClearOverlay(model: model) {
+                    model.advanceLevel()
+                }
+                .transition(.opacity.combined(with: .scale(scale: 0.94)))
+            }
+
+            if model.isRunOver {
+                RunOverOverlay(model: model, onRestart: { model.startRun() }, onMenu: { dismiss() })
                     .transition(.opacity.combined(with: .scale(scale: 0.94)))
             }
         }
-        .animation(.easeInOut(duration: 0.35), value: model.isGameWon)
+        .animation(.easeInOut(duration: 0.35), value: model.isLevelWon)
+        .animation(.easeInOut(duration: 0.35), value: model.isRunOver)
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
@@ -38,7 +42,7 @@ struct GameBoardView: View {
                 }
             }
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button { model.newGame() } label: {
+                Button { model.startRun() } label: {
                     Image(systemName: "arrow.clockwise")
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(.white)
@@ -62,24 +66,27 @@ struct GameBoardView: View {
 
     private var statsBar: some View {
         HStack(spacing: 10) {
-            StatPill(icon: "hand.tap", label: "Moves", value: "\(model.moves)")
+            StatPill(icon: "list.number", label: "Level", value: "\(model.level)")
             Spacer()
-            StatPill(icon: "checkmark.circle", label: "Pairs", value: "\(model.matchedPairs)/\(model.difficulty.pairs)")
+            StatPill(icon: "star.fill", label: "Score", value: "\(model.score)")
             Spacer()
-            StatPill(icon: "clock", label: "Time", value: model.formattedTime)
+            if model.livesActive {
+                LivesPill(lives: model.lives)
+            } else {
+                StatPill(icon: "hand.tap", label: "Moves", value: "\(model.moves)")
+            }
         }
     }
 
     private var cardGrid: some View {
         GeometryReader { geo in
-            let cols = model.difficulty.columns
-            let rows = model.difficulty.rows
+            let cols = model.config.cols
+            let rows = model.config.rows
             let hPad: CGFloat = 14
             let hGap: CGFloat = 8
             let vGap: CGFloat = 8
             let cardW = (geo.size.width - 2 * hPad - CGFloat(cols - 1) * hGap) / CGFloat(cols)
             let cardH = (geo.size.height - CGFloat(rows - 1) * vGap) / CGFloat(rows)
-
             let gridCols = Array(repeating: GridItem(.fixed(cardW), spacing: hGap), count: cols)
 
             LazyVGrid(columns: gridCols, spacing: vGap) {
@@ -110,6 +117,26 @@ struct StatPill: View {
                 .foregroundStyle(.white.opacity(0.55))
                 .textCase(.uppercase)
                 .tracking(0.8)
+        }
+        .frame(minWidth: 72)
+        .padding(.vertical, 9)
+        .padding(.horizontal, 14)
+        .background(.white.opacity(0.09))
+        .clipShape(RoundedRectangle(cornerRadius: 13))
+    }
+}
+
+struct LivesPill: View {
+    let lives: Int
+
+    var body: some View {
+        HStack(spacing: 5) {
+            ForEach(0..<3, id: \.self) { i in
+                Image(systemName: i < lives ? "heart.fill" : "heart")
+                    .font(.system(size: 18, weight: .semibold))
+                    .foregroundStyle(i < lives ? Color(red: 1.0, green: 0.25, blue: 0.35) : .white.opacity(0.25))
+                    .animation(.spring(response: 0.3, dampingFraction: 0.55), value: lives)
+            }
         }
         .frame(minWidth: 72)
         .padding(.vertical, 9)

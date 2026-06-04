@@ -70,10 +70,12 @@ struct CardFront: View {
                     .stroke(isMatched ? Color.green.opacity(0.7) : Color.clear, lineWidth: 2.5)
             )
             .overlay(
-                Text(emoji)
-                    .font(.system(size: 500))
-                    .minimumScaleFactor(0.01)
-                    .padding(10)
+                GeometryReader { geo in
+                    Text(emoji)
+                        .font(.system(size: min(geo.size.width, geo.size.height) * 0.58))
+                        .frame(width: geo.size.width, height: geo.size.height)
+                }
+                .padding(8)
             )
     }
 }

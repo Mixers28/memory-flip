@@ -1,18 +1,24 @@
 import SwiftUI
 
 struct MenuView: View {
+    @AppStorage("highScore") private var highScore = 0
+    @AppStorage("bestLevel") private var bestLevel = 0
+
     var body: some View {
         NavigationStack {
             ZStack {
                 background
-                VStack(spacing: 48) {
+                VStack(spacing: 44) {
                     titleSection
-                    difficultySection
+                    if highScore > 0 {
+                        recordsSection
+                    }
+                    startButton
                 }
                 .padding(.horizontal, 28)
             }
-            .navigationDestination(for: Difficulty.self) { difficulty in
-                GameBoardView(difficulty: difficulty)
+            .navigationDestination(for: Bool.self) { _ in
+                GameBoardView()
             }
         }
     }
@@ -36,69 +42,69 @@ struct MenuView: View {
             Text("Memory Flip")
                 .font(.system(size: 40, weight: .bold, design: .rounded))
                 .foregroundStyle(.white)
-            Text("Match all the pairs to win")
-                .font(.system(size: 15, weight: .medium))
+            Text("Match pairs · survive on 3 lives · beat your best")
+                .font(.system(size: 14, weight: .medium))
                 .foregroundStyle(.white.opacity(0.6))
+                .multilineTextAlignment(.center)
         }
     }
 
-    private var difficultySection: some View {
-        VStack(spacing: 14) {
-            Text("Choose Difficulty")
-                .font(.system(size: 16, weight: .semibold))
-                .foregroundStyle(.white.opacity(0.7))
-                .textCase(.uppercase)
-                .tracking(1.5)
+    private var recordsSection: some View {
+        HStack(spacing: 12) {
+            RecordPill(icon: "trophy.fill", label: "High Score", value: "\(highScore)", color: Color(red: 1.0, green: 0.75, blue: 0.1))
+            RecordPill(icon: "arrow.up.circle.fill", label: "Best Level", value: "\(bestLevel)", color: Color(red: 0.35, green: 0.75, blue: 1.0))
+        }
+    }
 
-            ForEach(Difficulty.allCases, id: \.self) { difficulty in
-                NavigationLink(value: difficulty) {
-                    DifficultyRow(difficulty: difficulty)
-                }
+    private var startButton: some View {
+        NavigationLink(value: true) {
+            HStack(spacing: 10) {
+                Image(systemName: "play.fill")
+                Text("Start Run")
+                    .font(.system(size: 20, weight: .bold, design: .rounded))
             }
+            .foregroundStyle(.white)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 18)
+            .background(
+                LinearGradient(
+                    colors: [Color(red: 0.45, green: 0.25, blue: 1.0), Color(red: 0.28, green: 0.10, blue: 0.80)],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 18))
+            .shadow(color: .purple.opacity(0.5), radius: 14, y: 6)
         }
     }
 }
 
-struct DifficultyRow: View {
-    let difficulty: Difficulty
-
-    var accentColor: Color {
-        switch difficulty {
-        case .easy:   return Color(red: 0.20, green: 0.80, blue: 0.40)
-        case .medium: return Color(red: 1.00, green: 0.60, blue: 0.10)
-        case .hard:   return Color(red: 0.95, green: 0.25, blue: 0.35)
-        }
-    }
+struct RecordPill: View {
+    let icon: String
+    let label: String
+    let value: String
+    let color: Color
 
     var body: some View {
-        HStack(spacing: 16) {
-            Text(difficulty.emoji)
-                .font(.system(size: 28))
-                .frame(width: 44, height: 44)
-                .background(accentColor.opacity(0.2))
-                .clipShape(RoundedRectangle(cornerRadius: 10))
-
-            VStack(alignment: .leading, spacing: 3) {
-                Text(difficulty.rawValue)
-                    .font(.system(size: 18, weight: .bold))
-                    .foregroundStyle(.white)
-                Text("\(difficulty.gridLabel)  ·  \(difficulty.pairsLabel)")
-                    .font(.system(size: 13))
-                    .foregroundStyle(.white.opacity(0.55))
-            }
-
-            Spacer()
-
-            Image(systemName: "chevron.right")
-                .font(.system(size: 13, weight: .semibold))
-                .foregroundStyle(.white.opacity(0.4))
+        VStack(spacing: 6) {
+            Image(systemName: icon)
+                .font(.system(size: 20))
+                .foregroundStyle(color)
+            Text(value)
+                .font(.system(size: 26, weight: .bold, design: .rounded))
+                .foregroundStyle(.white)
+            Text(label)
+                .font(.system(size: 11, weight: .medium))
+                .foregroundStyle(.white.opacity(0.55))
+                .textCase(.uppercase)
+                .tracking(0.8)
         }
-        .padding(.horizontal, 18)
-        .padding(.vertical, 14)
-        .background(.white.opacity(0.07))
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 16)
+        .background(.white.opacity(0.08))
         .overlay(
             RoundedRectangle(cornerRadius: 16)
-                .stroke(accentColor.opacity(0.35), lineWidth: 1)
+                .stroke(color.opacity(0.3), lineWidth: 1)
         )
         .clipShape(RoundedRectangle(cornerRadius: 16))
     }
