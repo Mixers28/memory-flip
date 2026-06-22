@@ -1,4 +1,4 @@
-# Memory Flip
+# PairFlip
 
 A card flip memory game — available as a browser app and a native iOS app.
 

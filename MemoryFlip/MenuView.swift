@@ -39,7 +39,7 @@ struct MenuView: View {
         VStack(spacing: 12) {
             Text("🃏")
                 .font(.system(size: 72))
-            Text("Memory Flip")
+            Text("PairFlip")
                 .font(.system(size: 40, weight: .bold, design: .rounded))
                 .foregroundStyle(.white)
             Text("Match pairs · beat your best score")

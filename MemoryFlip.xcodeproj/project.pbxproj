@@ -11,7 +11,7 @@
 		55966DBB252D466B9273CAF7 /* WinOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436069C27AC94658979E5D7F /* WinOverlayView.swift */; };
 		5A45656B96E141658DE16AC3 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D97AEB50A2481CA563C3A6 /* CardView.swift */; };
 		637B5D21C4374CDE930E2E07 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6CCB8B0B218644019EEF4276 /* Assets.xcassets */; };
-		6585130759194F4FA275DDCD /* MemoryFlipApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D318D03D89EE4048B9DAC07B /* MemoryFlipApp.swift */; };
+		6585130759194F4FA275DDCD /* PairFlipApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D318D03D89EE4048B9DAC07B /* PairFlipApp.swift */; };
 		C9CFA0E04D634C60A88B785D /* GameBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E3B095E36094067AB9BC2C6 /* GameBoardView.swift */; };
 		F127F4C1B8AE4C2DABFFD5A4 /* GameModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B25C462AE8A4C87AF3ED028 /* GameModel.swift */; };
 /* End PBXBuildFile section */
@@ -20,11 +20,12 @@
 		1B25C462AE8A4C87AF3ED028 /* GameModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameModel.swift; sourceTree = "<group>"; };
 		24D97AEB50A2481CA563C3A6 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		436069C27AC94658979E5D7F /* WinOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WinOverlayView.swift; sourceTree = "<group>"; };
-		6B99CC98CA404B98A570287D /* MemoryFlip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MemoryFlip.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C394C152FE8A4040070000E /* PairFlip.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PairFlip.entitlements; sourceTree = "<group>"; };
+		6B99CC98CA404B98A570287D /* PairFlip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PairFlip.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6CCB8B0B218644019EEF4276 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6E3B095E36094067AB9BC2C6 /* GameBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameBoardView.swift; sourceTree = "<group>"; };
 		A315048B97074450ABE619AD /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
-		D318D03D89EE4048B9DAC07B /* MemoryFlipApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryFlipApp.swift; sourceTree = "<group>"; };
+		D318D03D89EE4048B9DAC07B /* PairFlipApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairFlipApp.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,7 +42,8 @@
 		0C0F7C667D0B4B70832788EA /* MemoryFlip */ = {
 			isa = PBXGroup;
 			children = (
-				D318D03D89EE4048B9DAC07B /* MemoryFlipApp.swift */,
+				4C394C152FE8A4040070000E /* PairFlip.entitlements */,
+				D318D03D89EE4048B9DAC07B /* PairFlipApp.swift */,
 				1B25C462AE8A4C87AF3ED028 /* GameModel.swift */,
 				A315048B97074450ABE619AD /* MenuView.swift */,
 				6E3B095E36094067AB9BC2C6 /* GameBoardView.swift */,
@@ -55,7 +57,7 @@
 		3A587628C071480BBA163B1A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				6B99CC98CA404B98A570287D /* MemoryFlip.app */,
+				6B99CC98CA404B98A570287D /* PairFlip.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -71,9 +73,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		816D502CC8294E42941D823C /* MemoryFlip */ = {
+		816D502CC8294E42941D823C /* PairFlip */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = FBE8B45E97A6449F83CBD98B /* Build configuration list for PBXNativeTarget "MemoryFlip" */;
+			buildConfigurationList = FBE8B45E97A6449F83CBD98B /* Build configuration list for PBXNativeTarget "PairFlip" */;
 			buildPhases = (
 				6275A02DB7AC40BDA6E1CE3B /* Sources */,
 				DB6055511B5D4CEBB70D4EF1 /* Frameworks */,
@@ -83,9 +85,9 @@
 			);
 			dependencies = (
 			);
-			name = MemoryFlip;
-			productName = MemoryFlip;
-			productReference = 6B99CC98CA404B98A570287D /* MemoryFlip.app */;
+			name = PairFlip;
+			productName = PairFlip;
+			productReference = 6B99CC98CA404B98A570287D /* PairFlip.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -116,7 +118,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				816D502CC8294E42941D823C /* MemoryFlip */,
+				816D502CC8294E42941D823C /* PairFlip */,
 			);
 		};
 /* End PBXProject section */
@@ -137,7 +139,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6585130759194F4FA275DDCD /* MemoryFlipApp.swift in Sources */,
+				6585130759194F4FA275DDCD /* PairFlipApp.swift in Sources */,
 				F127F4C1B8AE4C2DABFFD5A4 /* GameModel.swift in Sources */,
 				234201E7BE4A4C58B8687316 /* MenuView.swift in Sources */,
 				C9CFA0E04D634C60A88B785D /* GameBoardView.swift in Sources */,
@@ -210,27 +212,35 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = MemoryFlip/PairFlip.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = CCQNLNZKFG;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = PairFlip;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationPortrait";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.choasisaladder.memoryflip;
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.chaosisaladder.pairflip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -238,27 +248,35 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = MemoryFlip/PairFlip.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = CCQNLNZKFG;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = PairFlip;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationPortrait";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.choasisaladder.memoryflip;
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.chaosisaladder.pairflip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -324,7 +342,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		FBE8B45E97A6449F83CBD98B /* Build configuration list for PBXNativeTarget "MemoryFlip" */ = {
+		FBE8B45E97A6449F83CBD98B /* Build configuration list for PBXNativeTarget "PairFlip" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D3029BDC489946A395CD0648 /* Debug */,

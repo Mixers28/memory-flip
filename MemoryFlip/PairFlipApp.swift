@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct MemoryFlipApp: App {
+struct PairFlipApp: App {
     var body: some Scene {
         WindowGroup {
             MenuView()
