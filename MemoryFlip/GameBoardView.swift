@@ -1,8 +1,12 @@
 import SwiftUI
 
 struct GameBoardView: View {
-    @StateObject private var model = GameModel()
+    @StateObject private var model: GameModel
     @Environment(\.dismiss) private var dismiss
+
+    init(start: GameStart) {
+        _model = StateObject(wrappedValue: GameModel(start: start))
+    }
 
     var body: some View {
         ZStack {
@@ -12,12 +16,26 @@ struct GameBoardView: View {
                     .padding(.horizontal, 20)
                     .padding(.top, 12)
                     .padding(.bottom, 16)
-                cardGrid
+                switch model.phase {
+                case .cards:       cardGrid
+                case .pattern:     PatternBoardView(model: model)
+                case .gridFlash:   GridFlashBoardView(model: model)
+                case .numberOrder: NumberOrderBoardView(model: model)
+                case .oddOneOut:   OddOneOutBoardView(model: model)
+                case .stroop:      ColourStroopBoardView(model: model)
+                }
             }
 
             if model.isLevelWon && !model.isRunOver {
                 LevelClearOverlay(model: model) {
                     model.advanceLevel()
+                }
+                .transition(.opacity.combined(with: .scale(scale: 0.94)))
+            }
+
+            if model.isSegmentCleared && !model.isRunOver {
+                HandoffOverlay(model: model) {
+                    model.advanceMarathon()
                 }
                 .transition(.opacity.combined(with: .scale(scale: 0.94)))
             }
@@ -28,6 +46,7 @@ struct GameBoardView: View {
             }
         }
         .animation(.easeInOut(duration: 0.35), value: model.isLevelWon)
+        .animation(.easeInOut(duration: 0.35), value: model.isSegmentCleared)
         .animation(.easeInOut(duration: 0.35), value: model.isRunOver)
         .navigationBarBackButtonHidden(true)
         .toolbar {
@@ -65,12 +84,40 @@ struct GameBoardView: View {
     }
 
     private var statsBar: some View {
-        HStack(spacing: 10) {
-            StatPill(icon: "list.number", label: "Level", value: "\(model.level)")
-            Spacer()
-            StatPill(icon: "star.fill", label: "Score", value: "\(model.score)")
-            Spacer()
-            StatPill(icon: "hand.tap", label: "Moves", value: "\(model.moves)")
+        VStack(spacing: 10) {
+            if model.isMarathon {
+                Label("\(model.phase.title)", systemImage: model.phase.icon)
+                    .font(.system(size: 13, weight: .bold))
+                    .foregroundStyle(.white.opacity(0.85))
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 5)
+                    .background(.white.opacity(0.10))
+                    .clipShape(Capsule())
+            }
+            HStack(spacing: 10) {
+                if model.isMarathon {
+                    StatPill(icon: "flag.checkered", label: "Lap", value: "\(model.lap)")
+                } else {
+                    StatPill(icon: "list.number", label: "Level", value: "\(model.level)")
+                }
+                Spacer()
+                StatPill(icon: "star.fill", label: "Score", value: "\(model.score)")
+                Spacer()
+                switch model.phase {
+                case .cards:
+                    StatPill(icon: "hand.tap", label: "Moves", value: "\(model.moves)")
+                case .pattern:
+                    StatPill(icon: "waveform.path", label: "Length", value: "\(model.patternSequence.count)")
+                case .gridFlash:
+                    StatPill(icon: "circle.grid.3x3.fill", label: "Find", value: "\(model.flashSelected.count)/\(model.flashLitCells.count)")
+                case .numberOrder:
+                    StatPill(icon: "textformat.123", label: "Next", value: "\(min(model.numberNextExpected, model.numberCount))/\(model.numberCount)")
+                case .oddOneOut:
+                    StatPill(icon: "eye.fill", label: "Grid", value: "\(model.oddCols)×\(model.oddRows)")
+                case .stroop:
+                    StatPill(icon: "paintpalette.fill", label: "Colours", value: "\(model.stroopOptions.count)")
+                }
+            }
         }
     }
 

@@ -3,22 +3,43 @@ import SwiftUI
 struct MenuView: View {
     @AppStorage("highScore") private var highScore = 0
     @AppStorage("bestLevel") private var bestLevel = 0
+    @State private var path: [GameStart] = []
+
+    // Screenshot/demo deep-link: SIMCTL_CHILD_LAUNCH_MODE=<mode> jumps straight into a game.
+    private var launchStart: GameStart? {
+        guard let raw = ProcessInfo.processInfo.environment["LAUNCH_MODE"] else { return nil }
+        switch raw {
+        case "marathon":    return .marathon
+        case "cards":       return .practice(.cards)
+        case "pattern":     return .practice(.pattern)
+        case "gridFlash":   return .practice(.gridFlash)
+        case "numberOrder": return .practice(.numberOrder)
+        case "oddOneOut":   return .practice(.oddOneOut)
+        case "stroop":      return .practice(.stroop)
+        default:            return nil
+        }
+    }
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             ZStack {
                 background
-                VStack(spacing: 44) {
-                    titleSection
-                    if highScore > 0 {
-                        recordsSection
+                ScrollView {
+                    VStack(spacing: 28) {
+                        titleSection
+                            .padding(.top, 24)
+                        if highScore > 0 {
+                            recordsSection
+                        }
+                        modeButtons
                     }
-                    startButton
+                    .padding(.horizontal, 28)
+                    .padding(.bottom, 32)
                 }
-                .padding(.horizontal, 28)
             }
-            .navigationDestination(for: Bool.self) { _ in
-                GameBoardView()
+            .onAppear { if let start = launchStart, path.isEmpty { path = [start] } }
+            .navigationDestination(for: GameStart.self) { start in
+                GameBoardView(start: start)
             }
         }
     }
@@ -42,7 +63,7 @@ struct MenuView: View {
             Text("PairFlip")
                 .font(.system(size: 40, weight: .bold, design: .rounded))
                 .foregroundStyle(.white)
-            Text("Match pairs · beat your best score")
+            Text("Pick a game · beat your best score")
                 .font(.system(size: 14, weight: .medium))
                 .foregroundStyle(.white.opacity(0.6))
                 .multilineTextAlignment(.center)
@@ -56,25 +77,110 @@ struct MenuView: View {
         }
     }
 
-    private var startButton: some View {
-        NavigationLink(value: true) {
-            HStack(spacing: 10) {
-                Image(systemName: "play.fill")
-                Text("Start Run")
-                    .font(.system(size: 20, weight: .bold, design: .rounded))
+    private var modeButtons: some View {
+        VStack(spacing: 14) {
+            ModeButton(
+                start: .marathon,
+                icon: "flag.checkered",
+                title: "Marathon",
+                subtitle: "Every game, one run — keep your score going",
+                colors: [Color(red: 1.0, green: 0.55, blue: 0.0), Color(red: 0.95, green: 0.18, blue: 0.45)],
+                glow: Color(red: 0.95, green: 0.35, blue: 0.2)
+            )
+
+            Text("OR PRACTICE A GAME")
+                .font(.system(size: 10, weight: .semibold))
+                .foregroundStyle(.white.opacity(0.4))
+                .tracking(1.2)
+                .padding(.top, 6)
+
+            ModeButton(
+                start: .practice(.cards),
+                icon: GamePhase.cards.icon,
+                title: GamePhase.cards.title,
+                subtitle: "Flip and pair the tiles",
+                colors: [Color(red: 0.45, green: 0.25, blue: 1.0), Color(red: 0.28, green: 0.10, blue: 0.80)],
+                glow: .purple
+            )
+            ModeButton(
+                start: .practice(.pattern),
+                icon: GamePhase.pattern.icon,
+                title: GamePhase.pattern.title,
+                subtitle: "Repeat the lighting sequence",
+                colors: [Color(red: 0.0, green: 0.70, blue: 0.65), Color(red: 0.85, green: 0.20, blue: 0.55)],
+                glow: Color(red: 0.85, green: 0.20, blue: 0.55)
+            )
+            ModeButton(
+                start: .practice(.gridFlash),
+                icon: GamePhase.gridFlash.icon,
+                title: GamePhase.gridFlash.title,
+                subtitle: "Memorise and tap the lit cells",
+                colors: [Color(red: 0.15, green: 0.45, blue: 0.95), Color(red: 0.10, green: 0.75, blue: 0.85)],
+                glow: Color(red: 0.15, green: 0.55, blue: 0.95)
+            )
+            ModeButton(
+                start: .practice(.numberOrder),
+                icon: GamePhase.numberOrder.icon,
+                title: GamePhase.numberOrder.title,
+                subtitle: "Tap the numbers in order from memory",
+                colors: [Color(red: 0.95, green: 0.45, blue: 0.10), Color(red: 0.80, green: 0.20, blue: 0.30)],
+                glow: Color(red: 0.95, green: 0.45, blue: 0.10)
+            )
+            ModeButton(
+                start: .practice(.oddOneOut),
+                icon: GamePhase.oddOneOut.icon,
+                title: GamePhase.oddOneOut.title,
+                subtitle: "Spot the tile that differs, fast",
+                colors: [Color(red: 0.35, green: 0.30, blue: 0.85), Color(red: 0.65, green: 0.20, blue: 0.75)],
+                glow: Color(red: 0.5, green: 0.25, blue: 0.85)
+            )
+            ModeButton(
+                start: .practice(.stroop),
+                icon: GamePhase.stroop.icon,
+                title: GamePhase.stroop.title,
+                subtitle: "Tap the ink colour, not the word",
+                colors: [Color(red: 0.90, green: 0.30, blue: 0.45), Color(red: 0.45, green: 0.35, blue: 0.95)],
+                glow: Color(red: 0.7, green: 0.30, blue: 0.7)
+            )
+        }
+    }
+}
+
+private struct ModeButton: View {
+    let start: GameStart
+    let icon: String
+    let title: String
+    let subtitle: String
+    let colors: [Color]
+    let glow: Color
+
+    var body: some View {
+        NavigationLink(value: start) {
+            HStack(spacing: 14) {
+                Image(systemName: icon)
+                    .font(.system(size: 24, weight: .semibold))
+                    .frame(width: 34)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title)
+                        .font(.system(size: 19, weight: .bold, design: .rounded))
+                    Text(subtitle)
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundStyle(.white.opacity(0.75))
+                }
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(.white.opacity(0.7))
             }
             .foregroundStyle(.white)
-            .frame(maxWidth: .infinity)
             .padding(.vertical, 18)
+            .padding(.horizontal, 20)
+            .frame(maxWidth: .infinity)
             .background(
-                LinearGradient(
-                    colors: [Color(red: 0.45, green: 0.25, blue: 1.0), Color(red: 0.28, green: 0.10, blue: 0.80)],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
+                LinearGradient(colors: colors, startPoint: .topLeading, endPoint: .bottomTrailing)
             )
             .clipShape(RoundedRectangle(cornerRadius: 18))
-            .shadow(color: .purple.opacity(0.5), radius: 14, y: 6)
+            .shadow(color: glow.opacity(0.45), radius: 12, y: 5)
         }
     }
 }

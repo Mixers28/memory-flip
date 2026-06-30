@@ -10,6 +10,11 @@
 		234201E7BE4A4C58B8687316 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A315048B97074450ABE619AD /* MenuView.swift */; };
 		55966DBB252D466B9273CAF7 /* WinOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436069C27AC94658979E5D7F /* WinOverlayView.swift */; };
 		5A45656B96E141658DE16AC3 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D97AEB50A2481CA563C3A6 /* CardView.swift */; };
+		A1F2B3C4D5E60718293A4B5C /* PatternBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C2D3E4F5061728394A5B6C /* PatternBoardView.swift */; };
+		C2D3E4F5061728394A5B6C7D /* GridFlashBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E4F5061728394A5B6C7D8E /* GridFlashBoardView.swift */; };
+		E4F5061728394A5B6C7D8E9F /* NumberOrderBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5061728394A5B6C7D8E9FA0 /* NumberOrderBoardView.swift */; };
+		061728394A5B6C7D8E9FA0B1 /* OddOneOutBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1728394A5B6C7D8E9FA0B1C2 /* OddOneOutBoardView.swift */; };
+		28394A5B6C7D8E9FA0B1C2D3 /* ColourStroopBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 394A5B6C7D8E9FA0B1C2D3E4 /* ColourStroopBoardView.swift */; };
 		637B5D21C4374CDE930E2E07 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6CCB8B0B218644019EEF4276 /* Assets.xcassets */; };
 		6585130759194F4FA275DDCD /* PairFlipApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D318D03D89EE4048B9DAC07B /* PairFlipApp.swift */; };
 		C9CFA0E04D634C60A88B785D /* GameBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E3B095E36094067AB9BC2C6 /* GameBoardView.swift */; };
@@ -25,6 +30,11 @@
 		6CCB8B0B218644019EEF4276 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6E3B095E36094067AB9BC2C6 /* GameBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameBoardView.swift; sourceTree = "<group>"; };
 		A315048B97074450ABE619AD /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
+		B1C2D3E4F5061728394A5B6C /* PatternBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatternBoardView.swift; sourceTree = "<group>"; };
+		D3E4F5061728394A5B6C7D8E /* GridFlashBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridFlashBoardView.swift; sourceTree = "<group>"; };
+		F5061728394A5B6C7D8E9FA0 /* NumberOrderBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberOrderBoardView.swift; sourceTree = "<group>"; };
+		1728394A5B6C7D8E9FA0B1C2 /* OddOneOutBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OddOneOutBoardView.swift; sourceTree = "<group>"; };
+		394A5B6C7D8E9FA0B1C2D3E4 /* ColourStroopBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColourStroopBoardView.swift; sourceTree = "<group>"; };
 		D318D03D89EE4048B9DAC07B /* PairFlipApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairFlipApp.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -48,6 +58,11 @@
 				A315048B97074450ABE619AD /* MenuView.swift */,
 				6E3B095E36094067AB9BC2C6 /* GameBoardView.swift */,
 				24D97AEB50A2481CA563C3A6 /* CardView.swift */,
+				B1C2D3E4F5061728394A5B6C /* PatternBoardView.swift */,
+				D3E4F5061728394A5B6C7D8E /* GridFlashBoardView.swift */,
+				F5061728394A5B6C7D8E9FA0 /* NumberOrderBoardView.swift */,
+				1728394A5B6C7D8E9FA0B1C2 /* OddOneOutBoardView.swift */,
+				394A5B6C7D8E9FA0B1C2D3E4 /* ColourStroopBoardView.swift */,
 				436069C27AC94658979E5D7F /* WinOverlayView.swift */,
 				6CCB8B0B218644019EEF4276 /* Assets.xcassets */,
 			);
@@ -144,6 +159,11 @@
 				234201E7BE4A4C58B8687316 /* MenuView.swift in Sources */,
 				C9CFA0E04D634C60A88B785D /* GameBoardView.swift in Sources */,
 				5A45656B96E141658DE16AC3 /* CardView.swift in Sources */,
+				A1F2B3C4D5E60718293A4B5C /* PatternBoardView.swift in Sources */,
+				C2D3E4F5061728394A5B6C7D /* GridFlashBoardView.swift in Sources */,
+				E4F5061728394A5B6C7D8E9F /* NumberOrderBoardView.swift in Sources */,
+				061728394A5B6C7D8E9FA0B1 /* OddOneOutBoardView.swift in Sources */,
+				28394A5B6C7D8E9FA0B1C2D3 /* ColourStroopBoardView.swift in Sources */,
 				55966DBB252D466B9273CAF7 /* WinOverlayView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -224,7 +244,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationPortrait";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -260,7 +280,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationPortrait";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

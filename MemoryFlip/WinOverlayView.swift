@@ -83,6 +83,87 @@ struct LevelClearOverlay: View {
     }
 }
 
+// Shown in marathon when a mode segment is cleared — announces the next game.
+struct HandoffOverlay: View {
+    @ObservedObject var model: GameModel
+    let onContinue: () -> Void
+
+    var body: some View {
+        ZStack {
+            Color.black.opacity(0.72).ignoresSafeArea()
+
+            VStack(spacing: 22) {
+                VStack(spacing: 6) {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.system(size: 50))
+                        .foregroundStyle(Color(red: 0.3, green: 1.0, blue: 0.5))
+                    Text("\(model.phase.title) cleared!")
+                        .font(.system(size: 26, weight: .bold, design: .rounded))
+                        .foregroundStyle(.white)
+                    if model.willCompleteLapNext {
+                        Text("Lap \(model.lap) complete — speeding up!")
+                            .font(.system(size: 13, weight: .semibold))
+                            .foregroundStyle(Color(red: 1.0, green: 0.8, blue: 0.2))
+                    }
+                }
+
+                VStack(spacing: 4) {
+                    Text("Run total")
+                        .font(.system(size: 11, weight: .medium))
+                        .foregroundStyle(.white.opacity(0.5))
+                        .textCase(.uppercase)
+                        .tracking(0.8)
+                    Text("\(model.score)")
+                        .font(.system(size: 36, weight: .bold, design: .rounded))
+                        .foregroundStyle(.white)
+                }
+
+                VStack(spacing: 6) {
+                    Text("Up next")
+                        .font(.system(size: 11, weight: .medium))
+                        .foregroundStyle(.white.opacity(0.5))
+                        .textCase(.uppercase)
+                        .tracking(0.8)
+                    Label(model.nextMarathonMode.title, systemImage: model.nextMarathonMode.icon)
+                        .font(.system(size: 18, weight: .bold, design: .rounded))
+                        .foregroundStyle(.white)
+                }
+                .padding(.vertical, 12)
+                .padding(.horizontal, 22)
+                .frame(maxWidth: .infinity)
+                .background(.white.opacity(0.07))
+                .clipShape(RoundedRectangle(cornerRadius: 16))
+
+                Button(action: onContinue) {
+                    HStack(spacing: 8) {
+                        Text("Play")
+                        Image(systemName: "arrow.right")
+                    }
+                    .font(.system(size: 18, weight: .bold))
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 16)
+                    .background(
+                        LinearGradient(
+                            colors: [Color(red: 0.45, green: 0.25, blue: 1.0), Color(red: 0.28, green: 0.10, blue: 0.80)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                }
+            }
+            .padding(28)
+            .background(
+                RoundedRectangle(cornerRadius: 28)
+                    .fill(.ultraThinMaterial)
+                    .overlay(RoundedRectangle(cornerRadius: 28).stroke(.white.opacity(0.15), lineWidth: 1))
+            )
+            .padding(.horizontal, 28)
+        }
+    }
+}
+
 // Shown when the player runs out of lives
 struct RunOverOverlay: View {
     @ObservedObject var model: GameModel
