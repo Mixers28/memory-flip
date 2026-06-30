@@ -3,25 +3,9 @@ import SwiftUI
 struct MenuView: View {
     @AppStorage("highScore") private var highScore = 0
     @AppStorage("bestLevel") private var bestLevel = 0
-    @State private var path: [GameStart] = []
-
-    // Screenshot/demo deep-link: SIMCTL_CHILD_LAUNCH_MODE=<mode> jumps straight into a game.
-    private var launchStart: GameStart? {
-        guard let raw = ProcessInfo.processInfo.environment["LAUNCH_MODE"] else { return nil }
-        switch raw {
-        case "marathon":    return .marathon
-        case "cards":       return .practice(.cards)
-        case "pattern":     return .practice(.pattern)
-        case "gridFlash":   return .practice(.gridFlash)
-        case "numberOrder": return .practice(.numberOrder)
-        case "oddOneOut":   return .practice(.oddOneOut)
-        case "stroop":      return .practice(.stroop)
-        default:            return nil
-        }
-    }
 
     var body: some View {
-        NavigationStack(path: $path) {
+        NavigationStack {
             ZStack {
                 background
                 ScrollView {
@@ -37,7 +21,6 @@ struct MenuView: View {
                     .padding(.bottom, 32)
                 }
             }
-            .onAppear { if let start = launchStart, path.isEmpty { path = [start] } }
             .navigationDestination(for: GameStart.self) { start in
                 GameBoardView(start: start)
             }

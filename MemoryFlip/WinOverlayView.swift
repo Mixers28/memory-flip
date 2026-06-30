@@ -241,6 +241,21 @@ struct RunOverOverlay: View {
                             .clipShape(RoundedRectangle(cornerRadius: 15))
                     }
                 }
+
+                if let kofi = URL(string: "https://ko-fi.com/mixers") {
+                    Link(destination: kofi) {
+                        HStack(spacing: 7) {
+                            Text("☕️")
+                            Text("Enjoying PairFlip? Buy me a coffee")
+                                .font(.system(size: 13, weight: .semibold))
+                        }
+                        .foregroundStyle(Color(red: 1.0, green: 0.80, blue: 0.15))
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 11)
+                        .background(Color(red: 1.0, green: 0.80, blue: 0.15).opacity(0.12))
+                        .clipShape(RoundedRectangle(cornerRadius: 13))
+                    }
+                }
             }
             .padding(28)
             .background(

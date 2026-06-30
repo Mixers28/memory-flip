@@ -61,10 +61,6 @@ struct Card: Identifiable {
 }
 
 class GameModel: ObservableObject {
-    // Screenshot/demo hook: when SCREENSHOT_MODE=1 is set in the environment, transient
-    // states are frozen (reveals stay shown, timers don't tick) so captures are stable.
-    static let screenshotMode = ProcessInfo.processInfo.environment["SCREENSHOT_MODE"] == "1"
-
     // Run configuration
     let isMarathon: Bool
     let marathonOrder: [GamePhase] = [.cards, .pattern, .gridFlash, .numberOrder, .oddOneOut, .stroop]
@@ -286,7 +282,6 @@ class GameModel: ObservableObject {
         lastLevelEfficiencyBonus = 0
         lastLevelWasPerfect = false
         if isMarathon { phase = marathonOrder[0] }
-        if GameModel.screenshotMode, phase == .cards { modeLevel[.cards] = 5 }   // 4×4 board for a fuller capture
         startLevel()
     }
 
@@ -379,20 +374,6 @@ class GameModel: ObservableObject {
         wrongFlipsThisLevel = 0
         firstFlippedIndex = nil
         isChecking = false
-
-        if GameModel.screenshotMode {
-            // Showcase the board: reveal several cards and mark one matched pair (green).
-            for i in 0..<min(5, cards.count) { cards[i].isFlipped = true }
-            var byEmoji: [String: Int] = [:]
-            for i in cards.indices {
-                if let j = byEmoji[cards[i].emoji] {
-                    cards[i].isFlipped = true;  cards[i].isMatched = true
-                    cards[j].isFlipped = true;  cards[j].isMatched = true
-                    break
-                }
-                byEmoji[cards[i].emoji] = i
-            }
-        }
     }
 
     func flipCard(at index: Int) {
@@ -459,11 +440,7 @@ class GameModel: ObservableObject {
         patternSequence = (0..<level).map { _ in Int.random(in: 0..<patternTileCount) }
         patternInputCount = 0
         litTile = nil
-        if GameModel.screenshotMode {
-            litTile = patternSequence.first   // hold one tile lit for a clean capture
-        } else {
-            playBackSequence()
-        }
+        playBackSequence()
     }
 
     func tapTile(_ index: Int) {
@@ -552,7 +529,6 @@ class GameModel: ObservableObject {
         flashSelected = []
         flashRevealed = true   // show the pattern; input locked until it hides
 
-        if GameModel.screenshotMode { return }   // keep the lit cells visible for the capture
         let gen = transitionGeneration
         DispatchQueue.main.asyncAfter(deadline: .now() + flashRevealDuration) { [weak self] in
             guard let self, gen == self.transitionGeneration else { return }
@@ -635,7 +611,6 @@ class GameModel: ObservableObject {
         oddSolved = false
         oddRoundStart = Date()
 
-        if GameModel.screenshotMode { return }   // no countdown timeout during captures
         // Miss the clock and the run is over.
         let gen = transitionGeneration
         let duration = oddRoundDuration
@@ -680,7 +655,6 @@ class GameModel: ObservableObject {
         stroopSolved = false
         stroopRoundStart = Date()
 
-        if GameModel.screenshotMode { return }   // no countdown timeout during captures
         let gen = transitionGeneration
         let duration = stroopRoundDuration
         DispatchQueue.main.asyncAfter(deadline: .now() + duration) { [weak self] in
