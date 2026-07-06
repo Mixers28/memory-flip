@@ -81,7 +81,7 @@ struct MenuView: View {
                 start: .practice(.cards),
                 icon: GamePhase.cards.icon,
                 title: GamePhase.cards.title,
-                subtitle: "Flip and pair the tiles",
+                subtitle: GamePhase.cards.rules,
                 colors: [Color(red: 0.45, green: 0.25, blue: 1.0), Color(red: 0.28, green: 0.10, blue: 0.80)],
                 glow: .purple
             )
@@ -89,7 +89,7 @@ struct MenuView: View {
                 start: .practice(.pattern),
                 icon: GamePhase.pattern.icon,
                 title: GamePhase.pattern.title,
-                subtitle: "Repeat the lighting sequence",
+                subtitle: GamePhase.pattern.rules,
                 colors: [Color(red: 0.0, green: 0.70, blue: 0.65), Color(red: 0.85, green: 0.20, blue: 0.55)],
                 glow: Color(red: 0.85, green: 0.20, blue: 0.55)
             )
@@ -97,7 +97,7 @@ struct MenuView: View {
                 start: .practice(.gridFlash),
                 icon: GamePhase.gridFlash.icon,
                 title: GamePhase.gridFlash.title,
-                subtitle: "Memorise and tap the lit cells",
+                subtitle: GamePhase.gridFlash.rules,
                 colors: [Color(red: 0.15, green: 0.45, blue: 0.95), Color(red: 0.10, green: 0.75, blue: 0.85)],
                 glow: Color(red: 0.15, green: 0.55, blue: 0.95)
             )
@@ -105,7 +105,7 @@ struct MenuView: View {
                 start: .practice(.numberOrder),
                 icon: GamePhase.numberOrder.icon,
                 title: GamePhase.numberOrder.title,
-                subtitle: "Tap the numbers in order from memory",
+                subtitle: GamePhase.numberOrder.rules,
                 colors: [Color(red: 0.95, green: 0.45, blue: 0.10), Color(red: 0.80, green: 0.20, blue: 0.30)],
                 glow: Color(red: 0.95, green: 0.45, blue: 0.10)
             )
@@ -113,7 +113,7 @@ struct MenuView: View {
                 start: .practice(.oddOneOut),
                 icon: GamePhase.oddOneOut.icon,
                 title: GamePhase.oddOneOut.title,
-                subtitle: "Spot the tile that differs, fast",
+                subtitle: GamePhase.oddOneOut.rules,
                 colors: [Color(red: 0.35, green: 0.30, blue: 0.85), Color(red: 0.65, green: 0.20, blue: 0.75)],
                 glow: Color(red: 0.5, green: 0.25, blue: 0.85)
             )
@@ -121,7 +121,7 @@ struct MenuView: View {
                 start: .practice(.stroop),
                 icon: GamePhase.stroop.icon,
                 title: GamePhase.stroop.title,
-                subtitle: "Tap the ink colour, not the word",
+                subtitle: GamePhase.stroop.rules,
                 colors: [Color(red: 0.90, green: 0.30, blue: 0.45), Color(red: 0.45, green: 0.35, blue: 0.95)],
                 glow: Color(red: 0.7, green: 0.30, blue: 0.7)
             )

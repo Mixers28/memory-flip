@@ -40,6 +40,13 @@ struct GameBoardView: View {
                 .transition(.opacity.combined(with: .scale(scale: 0.94)))
             }
 
+            if model.isMarathonIntro {
+                MarathonIntroOverlay(model: model) {
+                    model.dismissMarathonIntro()
+                }
+                .transition(.opacity.combined(with: .scale(scale: 0.94)))
+            }
+
             if model.isRunOver {
                 RunOverOverlay(model: model, onRestart: { model.startRun() }, onMenu: { dismiss() })
                     .transition(.opacity.combined(with: .scale(scale: 0.94)))
@@ -47,6 +54,7 @@ struct GameBoardView: View {
         }
         .animation(.easeInOut(duration: 0.35), value: model.isLevelWon)
         .animation(.easeInOut(duration: 0.35), value: model.isSegmentCleared)
+        .animation(.easeInOut(duration: 0.35), value: model.isMarathonIntro)
         .animation(.easeInOut(duration: 0.35), value: model.isRunOver)
         .navigationBarBackButtonHidden(true)
         .toolbar {

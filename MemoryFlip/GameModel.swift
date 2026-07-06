@@ -31,6 +31,19 @@ enum GamePhase: Hashable {
         }
     }
 
+    // One-line "how to play" shown wherever a player might be new to this mode —
+    // the menu, and marathon's intro/handoff overlays.
+    var rules: String {
+        switch self {
+        case .cards:       return "Flip two tiles — find all the matching pairs."
+        case .pattern:     return "Watch the colour + sound sequence, then repeat it in order."
+        case .gridFlash:   return "Memorise the lit cells, then tap them all from memory."
+        case .numberOrder: return "Tap the numbers in order, from memory."
+        case .oddOneOut:   return "Spot the one tile that differs — before the clock runs out."
+        case .stroop:      return "Tap the ink colour of the word, not what it spells."
+        }
+    }
+
     // Modes that end the run on a wrong move (vs. modes you simply keep clearing).
     var canFailRun: Bool {
         switch self {
@@ -71,6 +84,7 @@ class GameModel: ObservableObject {
     @Published var lap = 1
     @Published var isLevelWon = false       // practice: a single level cleared (cards)
     @Published var isSegmentCleared = false // marathon: a mode segment cleared, handoff pending
+    @Published var isMarathonIntro = false  // marathon: run just started, rules overlay pending
     @Published var isRunOver = false
     @Published var isNewHighScore = false
 
@@ -281,7 +295,17 @@ class GameModel: ObservableObject {
         lastLevelTimeBonus = 0
         lastLevelEfficiencyBonus = 0
         lastLevelWasPerfect = false
-        if isMarathon { phase = marathonOrder[0] }
+        if isMarathon {
+            phase = marathonOrder[0]
+            isMarathonIntro = true   // hold on the rules overlay; startLevel() runs on dismiss
+        } else {
+            startLevel()
+        }
+    }
+
+    // Marathon intro "Start" button — the run's board/timers only begin once rules are dismissed.
+    func dismissMarathonIntro() {
+        isMarathonIntro = false
         startLevel()
     }
 
@@ -381,6 +405,7 @@ class GameModel: ObservableObject {
               !isChecking,
               !isLevelWon,
               !isSegmentCleared,
+              !isMarathonIntro,
               !isRunOver,
               index < cards.count,
               !cards[index].isFlipped,
@@ -398,11 +423,13 @@ class GameModel: ObservableObject {
                 cards[index].isMatched = true
                 matchedPairs += 1
                 isChecking = false
+                GameSoundPlayer.shared.playSuccess()
                 if matchedPairs == config.pairs {
                     completeCardsLevel()
                 }
             } else {
                 wrongFlipsThisLevel += 1
+                GameSoundPlayer.shared.playFailure()
                 let a = firstIdx, b = index
                 DispatchQueue.main.asyncAfter(deadline: .now() + peekDuration) { [weak self] in
                     guard let self else { return }
@@ -448,6 +475,7 @@ class GameModel: ObservableObject {
               !isPlayingBack,
               !isLevelWon,
               !isSegmentCleared,
+              !isMarathonIntro,
               !isRunOver,
               patternInputCount < patternSequence.count else { return }
 
@@ -486,6 +514,7 @@ class GameModel: ObservableObject {
     private func flashTile(_ index: Int) {
         let gen = transitionGeneration
         litTile = index
+        GameSoundPlayer.shared.playTile(index)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.18) { [weak self] in
             guard let self, gen == self.transitionGeneration else { return }
             if self.litTile == index { self.litTile = nil }
@@ -506,6 +535,7 @@ class GameModel: ObservableObject {
             DispatchQueue.main.asyncAfter(deadline: .now() + onAt) { [weak self] in
                 guard let self, gen == self.transitionGeneration else { return }
                 self.litTile = tile
+                GameSoundPlayer.shared.playTile(tile)
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + onAt + flashOn) { [weak self] in
                 guard let self, gen == self.transitionGeneration else { return }
@@ -540,15 +570,18 @@ class GameModel: ObservableObject {
         guard phase == .gridFlash,
               !flashRevealed,
               !isSegmentCleared,
+              !isMarathonIntro,
               !isRunOver,
               !flashSelected.contains(index) else { return }
 
         if flashLitCells.contains(index) {
             flashSelected.insert(index)
+            GameSoundPlayer.shared.playSuccess()
             if flashSelected == flashLitCells {
                 completeGridFlashRound()
             }
         } else {
+            GameSoundPlayer.shared.playFailure()
             endRun()
         }
     }
@@ -576,19 +609,26 @@ class GameModel: ObservableObject {
     func tapNumberCell(_ index: Int) {
         guard phase == .numberOrder,
               !isSegmentCleared,
+              !isMarathonIntro,
               !isRunOver,
               !numberSolved.contains(index) else { return }
 
-        guard let num = numberAtCell[index] else { endRun(); return }   // tapped an empty cell
+        guard let num = numberAtCell[index] else {   // tapped an empty cell
+            GameSoundPlayer.shared.playFailure()
+            endRun()
+            return
+        }
 
         if num == numberNextExpected {
             if numberNextExpected == 1 { numbersHidden = true }   // hide the rest after the first tap
             numberSolved.insert(index)
             numberNextExpected += 1
+            GameSoundPlayer.shared.playSuccess()
             if numberNextExpected > numberCount {
                 completeNumberOrderRound()
             }
         } else {
+            GameSoundPlayer.shared.playFailure()
             endRun()
         }
     }
@@ -616,7 +656,8 @@ class GameModel: ObservableObject {
         let duration = oddRoundDuration
         DispatchQueue.main.asyncAfter(deadline: .now() + duration) { [weak self] in
             guard let self, gen == self.transitionGeneration,
-                  !self.oddSolved, !self.isRunOver, !self.isSegmentCleared else { return }
+                  !self.oddSolved, !self.isRunOver, !self.isSegmentCleared, !self.isMarathonIntro else { return }
+            GameSoundPlayer.shared.playFailure()
             self.endRun()
         }
     }
@@ -625,12 +666,15 @@ class GameModel: ObservableObject {
         guard phase == .oddOneOut,
               !oddSolved,
               !isSegmentCleared,
+              !isMarathonIntro,
               !isRunOver else { return }
 
         if index == oddIndex {
             oddSolved = true
+            GameSoundPlayer.shared.playSuccess()
             completeOddRound()
         } else {
+            GameSoundPlayer.shared.playFailure()
             endRun()
         }
     }
@@ -659,7 +703,8 @@ class GameModel: ObservableObject {
         let duration = stroopRoundDuration
         DispatchQueue.main.asyncAfter(deadline: .now() + duration) { [weak self] in
             guard let self, gen == self.transitionGeneration,
-                  !self.stroopSolved, !self.isRunOver, !self.isSegmentCleared else { return }
+                  !self.stroopSolved, !self.isRunOver, !self.isSegmentCleared, !self.isMarathonIntro else { return }
+            GameSoundPlayer.shared.playFailure()
             self.endRun()
         }
     }
@@ -668,12 +713,15 @@ class GameModel: ObservableObject {
         guard phase == .stroop,
               !stroopSolved,
               !isSegmentCleared,
+              !isMarathonIntro,
               !isRunOver else { return }
 
         if paletteIndex == stroopInkIndex {
             stroopSolved = true
+            GameSoundPlayer.shared.playSuccess()
             completeStroopRound()
         } else {
+            GameSoundPlayer.shared.playFailure()
             endRun()
         }
     }

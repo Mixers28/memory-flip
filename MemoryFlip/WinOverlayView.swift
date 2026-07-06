@@ -127,6 +127,15 @@ struct HandoffOverlay: View {
                     Label(model.nextMarathonMode.title, systemImage: model.nextMarathonMode.icon)
                         .font(.system(size: 18, weight: .bold, design: .rounded))
                         .foregroundStyle(.white)
+                    Text(model.nextMarathonMode.rules)
+                        .font(.system(size: 13, weight: .medium))
+                        .foregroundStyle(.white.opacity(0.7))
+                        .multilineTextAlignment(.center)
+                    if model.nextMarathonMode.canFailRun {
+                        Text("Miss and the run ends")
+                            .font(.system(size: 11, weight: .semibold))
+                            .foregroundStyle(Color(red: 1.0, green: 0.55, blue: 0.35))
+                    }
                 }
                 .padding(.vertical, 12)
                 .padding(.horizontal, 22)
@@ -146,6 +155,85 @@ struct HandoffOverlay: View {
                     .background(
                         LinearGradient(
                             colors: [Color(red: 0.45, green: 0.25, blue: 1.0), Color(red: 0.28, green: 0.10, blue: 0.80)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                }
+            }
+            .padding(28)
+            .background(
+                RoundedRectangle(cornerRadius: 28)
+                    .fill(.ultraThinMaterial)
+                    .overlay(RoundedRectangle(cornerRadius: 28).stroke(.white.opacity(0.15), lineWidth: 1))
+            )
+            .padding(.horizontal, 28)
+        }
+    }
+}
+
+// Shown once, before the first mode of a marathon run — explains the rotation
+// and the first game's rules, since players otherwise get dropped straight in.
+struct MarathonIntroOverlay: View {
+    @ObservedObject var model: GameModel
+    let onStart: () -> Void
+
+    var body: some View {
+        ZStack {
+            Color.black.opacity(0.72).ignoresSafeArea()
+
+            VStack(spacing: 22) {
+                VStack(spacing: 6) {
+                    Image(systemName: "flag.checkered")
+                        .font(.system(size: 46))
+                        .foregroundStyle(Color(red: 1.0, green: 0.65, blue: 0.2))
+                    Text("Marathon")
+                        .font(.system(size: 26, weight: .bold, design: .rounded))
+                        .foregroundStyle(.white)
+                    Text("All 6 games in one run — clear each to move to the next. Score carries the whole way.")
+                        .font(.system(size: 13, weight: .medium))
+                        .foregroundStyle(.white.opacity(0.65))
+                        .multilineTextAlignment(.center)
+                }
+
+                VStack(spacing: 6) {
+                    Text("First up")
+                        .font(.system(size: 11, weight: .medium))
+                        .foregroundStyle(.white.opacity(0.5))
+                        .textCase(.uppercase)
+                        .tracking(0.8)
+                    Label(model.phase.title, systemImage: model.phase.icon)
+                        .font(.system(size: 18, weight: .bold, design: .rounded))
+                        .foregroundStyle(.white)
+                    Text(model.phase.rules)
+                        .font(.system(size: 13, weight: .medium))
+                        .foregroundStyle(.white.opacity(0.7))
+                        .multilineTextAlignment(.center)
+                    if model.phase.canFailRun {
+                        Text("Miss and the run ends")
+                            .font(.system(size: 11, weight: .semibold))
+                            .foregroundStyle(Color(red: 1.0, green: 0.55, blue: 0.35))
+                    }
+                }
+                .padding(.vertical, 12)
+                .padding(.horizontal, 22)
+                .frame(maxWidth: .infinity)
+                .background(.white.opacity(0.07))
+                .clipShape(RoundedRectangle(cornerRadius: 16))
+
+                Button(action: onStart) {
+                    HStack(spacing: 8) {
+                        Text("Start")
+                        Image(systemName: "arrow.right")
+                    }
+                    .font(.system(size: 18, weight: .bold))
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 16)
+                    .background(
+                        LinearGradient(
+                            colors: [Color(red: 1.0, green: 0.55, blue: 0.0), Color(red: 0.95, green: 0.18, blue: 0.45)],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
