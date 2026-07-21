@@ -217,9 +217,10 @@ class GameModel: ObservableObject {
         max(0.35, 0.9 - Double(max(0, level - 9)) * 0.1)
     }
 
-    // Playback flash speed in the pattern game — quickens as the sequence lengthens
+    // Playback flash speed in the pattern game — quickens as the sequence lengthens.
+    // Floor must stay above the 0.16s tile tone so audio never outlasts the flash.
     var patternFlashDuration: Double {
-        max(0.26, 0.6 - Double(level) * 0.03)
+        max(0.18, 0.58 - Double(level) * 0.04)
     }
 
     // Grid Flash: grid grows in steps; lit-cell count climbs with the level.
